@@ -1,0 +1,7 @@
+"strain1","strain2","sex","lab","measure.name","treatment1","measure.name0","treatment2","mean1","mean2","sd1","sd2","n1","n2","diff","s2.pooled","SE","SE.adjusted","satter.df","gxl.adjusted.pv","common.pv","FDR.common.pv","FDR.gxl.adjusted.pv"
+"C57BL/6J","DBA/2J","Males","Crabbe4","grip.avg","control","grip.avg","control",5.219,5.113,0.276,0.119,6,6,0.106,0.014,0.069,0.115,21.246,0.364,0.153,0.153,0.364
+"C57BL/6J","SWR/J","Males","Crabbe4","grip.avg","control","grip.avg","control",5.219,4.835,0.276,0.111,6,6,0.384,0.012,0.064,0.106,21.246,0.002,0,0,0.005
+"C57BL/6J","DBA/2J","Males","Crabbe4","grip.avg","control","grip.avg","control",5.219,5.113,0.276,0.119,6,6,0.106,0.014,0.069,0.115,21.246,0.364,0.153,0.153,0.364
+"DBA/2J","SWR/J","Males","Crabbe4","grip.avg","control","grip.avg","control",5.113,4.835,0.119,0.111,6,6,0.278,0.012,0.064,0.106,21.246,0.016,0.001,0.002,0.024
+"C57BL/6J","SWR/J","Males","Crabbe4","grip.avg","control","grip.avg","control",5.219,4.835,0.276,0.111,6,6,0.384,0.012,0.064,0.106,21.246,0.002,0,0,0.005
+"DBA/2J","SWR/J","Males","Crabbe4","grip.avg","control","grip.avg","control",5.113,4.835,0.119,0.111,6,6,0.278,0.012,0.064,0.106,21.246,0.016,0.001,0.002,0.024

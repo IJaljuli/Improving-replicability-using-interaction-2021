@@ -1,4 +1,7 @@
-source('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Analysis_Functions.R')
+my.path <- '/Users/Iman/Documents/GitHub/Improving-replicability-using-interaction-2021/'
+
+source(paste0(my.path, 'R code/Analysis_Functions.R'))
+
 compute.df.sater <- function(s2int,df.int,s2pooled,n1,n2){
   inv.v <- (((1/n1+1/n2)*s2pooled)^2*1/(n1+n2-2)+(2*s2int)^2*1/df.int)/
     (((1/n1+1/n2)*s2pooled+2*s2int)^2)
@@ -24,7 +27,7 @@ alpha.threshold2 = 0.05
 
 
 ### import gxl estimates from IMPC
-gxl.info <- read.csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/gxl_estimates_from_IMPC.csv',header = T , stringsAsFactors = F)
+gxl.info <- read.csv(paste0(my.path, 'gxl_estimates_from_IMPC.csv'),header = T , stringsAsFactors = F)
 
 
 
@@ -39,13 +42,13 @@ names(gxl2.fac) <-  names(gxl.S) <- names(gxl.L) <-
 ##### TAU-JAX import after manipulation
 ##############
 
-OFT_combined_data <- read_csv(file = '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/OFT_combined_data.csv')
+OFT_combined_data <- read_csv(file = paste0(my.path, 'OFT_combined_data.csv'))
 
 
-TST_combined_data <- read_csv(file = '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/TST_combined_data.csv') %>% select(-c('...1'))
-bw_combined_data <- read_csv(file = '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/bw_combined_data.csv') %>% 
+TST_combined_data <- read_csv(file = paste0(my.path, 'TST_combined_data.csv')) %>% select(-c('...1'))
+bw_combined_data <- read_csv(file = paste0(my.path, 'bw_combined_data.csv')) %>% 
   rename('Body.Weight'= 'Body Weight')
-grip_combined_data <- read_csv(file = '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/grip_combined_data.csv')
+grip_combined_data <- read_csv(file = paste0(my.path, 'grip_combined_data.csv'))
 
 t.add <-  OFT_combined_data %>% 
   filter(  name %in% c('OFTlarge_centertime_20m_percent', 'OFTlarge_centertime_10m_percent', 'OFTsmall_centertime_10m_percent', 'OFTsmall_centertime_20m_percent'),
@@ -113,7 +116,7 @@ all_data_sets <- do.call(what = rbind, all_data_sets_list) %>%
   filter( ! (strain %in% c('C3H/HeJ'))) %>%
   mutate(strain = factor(strain, levels = c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  ')))
 
-# all_data_gxlEstimates <- read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/all_data_gxlEstimates.csv') %>%
+# all_data_gxlEstimates <- read_csv(my.path, 'all_data_gxlEstimates.csv') %>%
 #   pivot_longer(cols = c(error_sd_value,  int_sd_value), names_to = 'value_type',values_to = 'value') %>%
 #   mutate(x = recode(value_type,
 #                     'int_sd_value'= ' '     , 'error_sd_value'='  ')) %>%
@@ -230,7 +233,7 @@ write_csv(all_data_analyses_list    , path = 'TAUJAX_analyses_list.csv')
 write_csv(all_data_means %>% arrange(lab, sex, measure.name, treatment ), 'TAUJAX_means.csv')
 
 
-gxl_IMPC_all <- read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/IMPC_gxl_estimates.csv') %>%
+gxl_IMPC_all <- read_csv(paste0(my.path, 'IMPC_gxl_estimates.csv')) %>%
   dplyr::select(-c('...1')) %>% rename('IMPC_code' = 'X1')
 
 ##################
@@ -411,14 +414,14 @@ write_csv(all.contrasts2, file = 'Floxitine effect per strain: TAUJAX_theewayANO
 ### End: post hoc of Floxitine effect with gxl
 
 ### Begin: Tests of three-way interaction effect
-gxl_TAUJAX <- read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/TAUJAX_DFs_gxl.csv') %>% 
+gxl_TAUJAX <- read_csv( paste0(my.path, 'TAUJAX_DFs_gxl.csv')) %>% 
   rename( 'measure.name' = 'measure.name.MPDname', 'treatment' = 'treatment.MPDname', "gxl2.TAUJAX"="gxl2.fac") 
 gxl_TAUJAX <- gxl_TAUJAX %>% arrange(measure.name,treatment, sex ) %>%
   # dplyr::select(measure.name,treatment,sex,gxl2.TAUJAX) %>% 
   mutate(gxl.TAUJAX=sqrt(gxl2.TAUJAX))
 gxl_TAUJAX <- gxl_TAUJAX %>%
   dplyr::select(measure.name,treatment,sex,gxl.TAUJAX)
-gxl_IMPC <- read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/gxl_estimates_from_IMPC.csv') %>%
+gxl_IMPC <- read_csv( paste0(my.path, 'gxl_estimates_from_IMPC.csv')) %>%
   rename("gxl2.IMPC" = "gamma2 estimator", 'measure.name'='MPD_code') %>%  dplyr::select(`File name`, measure.name, sex, IMPC_code, gxl2.IMPC)
 gxl_IMPC <- gxl_IMPC %>% left_join(gxl_IMPC_all) %>% mutate(Sd_interaction = sqrt(S2_interaction))
 gxl_IMPC <- gxl_IMPC %>% 
@@ -613,7 +616,7 @@ pairs.all <- do.call(rbind, pairs.all)  %>%
 
 dd.means.filenames <- pairs.treatment.all <- list()
 all.pairs.comps <- merging.info <- NULL
-wd <- '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/MPD pairs/MPD data - arranged IJ/'
+wd <- paste0(my.path, 'MPD pairs/MPD data - arranged IJ/')
 (file.names <- list.files(path = wd, pattern = 'Lab_*'))
 for (file.name in file.names){
   dd <- read_csv(file = paste0(wd,file.name),skip_empty_rows = T)
@@ -1392,10 +1395,10 @@ dev.off()
 
 MPD_all_pairs <- all.pairs.comps %>% # read_csv( 'MPD_all_pairs_analysis.csv') %>% 
   rename('strain.1'='strain1', 'strain.2'='strain2')
-# gxl_IMPC_all <- read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/IMPC_gxl_estimates.csv') %>%
+# gxl_IMPC_all <- read_csv(my.path, 'IMPC_gxl_estimates.csv') %>%
 #   dplyr::select(-c('...1')) %>% rename('IMPC_code' = 'X1')
 
-gxl_IMPC <- read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/gxl_estimates_from_IMPC.csv') %>%
+gxl_IMPC <- read_csv(paste0(my.path, 'gxl_estimates_from_IMPC.csv')) %>%
   rename("gxl2.IMPC" = "gamma2 estimator", 'measure.name'='MPD_code') %>%
   dplyr::select(`File name`, measure.name, sex, IMPC_code, gxl2.IMPC)
 gxl_IMPC <- gxl_IMPC %>% left_join(gxl_IMPC_all) %>% mutate(gxl2.IMPC = S2_interaction/S2_error )
@@ -1406,23 +1409,23 @@ gxl_IMPC <- gxl_IMPC %>% rename("S2_interaction IMPC"="S2_interaction",     "S2_
   distinct() %>%
   mutate(treatment='Control') # %>% filter(!is.na(IMPC_code))
 
-TAUJAX_all_data_analyses <-  all_data_analyses_list %>% # read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/TAUJAX_analyses_list.csv') %>%
+TAUJAX_all_data_analyses <-  all_data_analyses_list %>% # read_csv(my.path, 'TAUJAX_analyses_list.csv') %>%
   # select(-c('strain.1...2','strain.2...3'))%>% rename('strain.1'='strain.1...8', 'strain.2'='strain.2...9') %>%
   dplyr::select(measure.name,treatment,sex,strain.1,strain.2, `Diff Multi`,`t-value REML`,`pval REML`)%>%
   distinct() %>%
   rename('t-value REML TAUJAX'='t-value REML', 'pval REML TAUJAX'='pval REML', 'Diff Multi TAUJAX' = 'Diff Multi')
 
-gxl_TAUJAX <- dfs_TAUJAX %>% # read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/TAUJAX_DFs_gxl.csv') %>% 
+gxl_TAUJAX <- dfs_TAUJAX %>% # read_csv(my.path, 'TAUJAX_DFs_gxl.csv') %>% 
   rename( 'measure.name' = 'measure.name.MPDname', 'treatment' = 'treatment.MPDname', "gxl2.TAUJAX"="gxl2.fac") %>%
   dplyr::select(measure.name, treatment, sex, df1_TAUJAX, df2_TAUJAX, gxl2.TAUJAX)
 
 
 
-gxl_TAUJAX2 <- all_data_gxlEstimates %>% # read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/all_data_gxlEstimates.csv') %>% 
+gxl_TAUJAX2 <- all_data_gxlEstimates %>% # read_csv(my.path, 'all_data_gxlEstimates.csv') %>% 
   rename('measure.name' = 'measure') %>%
   distinct()
 
-# all_data_gxlEstimates <- all_data_gxlEstimates %>% # read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/all_data_gxlEstimates.csv') %>% 
+# all_data_gxlEstimates <- all_data_gxlEstimates %>% # read_csv(my.path, 'all_data_gxlEstimates.csv') %>% 
 #   rename('measure.name' = 'measure') %>%
 #   select(-c("value_type" ,"value",'x')) %>%
 #   distinct()
@@ -1433,16 +1436,16 @@ gxl_TAUJAX <- gxl_TAUJAX %>% pivot_wider(id_cols = c("measure.name", "treatment"
   mutate( `S2_interaction TAUJAX`= `  Interaction SD`^2, `S2_error TAUJAX`=`   Error SD`^2) %>%
   dplyr::select(measure.name, treatment, sex, df1_TAUJAX, gxl2.TAUJAX,`S2_interaction TAUJAX` ,`S2_error TAUJAX` )
 
-IMPC_all_data_analyses <- rbind(read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/IMPC_analyses_list - Males.csv'),
-                                read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/IMPC_analyses_list - Females.csv')) %>%
+IMPC_all_data_analyses <- rbind(read_csv(my.path, 'IMPC_analyses_list - Males.csv'),
+                                read_csv(my.path, 'IMPC_analyses_list - Females.csv')) %>%
   rename(IMPC_code = measure.name)%>%
   dplyr::select(strain.1, strain.2,`Diff Multi`, `t-value REML`, `pval REML` ) %>%
   rename('t-value REML IMPC'='t-value REML', 'pval REML IMPC'='pval REML', 'Diff Multi IMPC' = 'Diff Multi') %>%
   distinct()
 
 
-IMPC_significance_of_strains <- rbind(read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/IMPC_strain_significance_Male.csv') ,
-                                      read_csv('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/IMPC_strain_significance_Female.csv') ) %>%
+IMPC_significance_of_strains <- rbind(read_csv(my.path, 'IMPC_strain_significance_Male.csv') ,
+                                      read_csv(my.path, 'IMPC_strain_significance_Female.csv') ) %>%
   rename('signif strain by IMPC'='signif strain')%>% mutate(treatment = 'Control')
 
 gxl_TAUJAX <- gxl_TAUJAX %>% # select(-c('value_type', 'value','x')) %>% 
@@ -1838,8 +1841,7 @@ all_comps_merged %>%
   rename( 'pvalue original' = 'MPD: common.pv', 
           'pvalue with gxl (from IMPC)'='MPD: gxl.adjusted.pv.IMPC', 
           'pvalue with gxl (from TAUJAX)'='MPD: gxl.adjusted.pv.TAUJAX', 
-          'MPD lab name'='lab.MPD') %>%
-  write_csv(.,file = '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/MPD_crossed_analysis_Neri.csv')
+          'MPD lab name'='lab.MPD')
 
 
 ################## 

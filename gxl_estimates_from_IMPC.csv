@@ -1,0 +1,16 @@
+File name ,MPD_code,sex,gamma2 estimator,labs.int,strains.int,transformation,IMPC_code
+Lab_Crabbe4_body_weight_Females.csv,Body.Weight,Female,0.071,3,7,,ESLIM_022_001_709.Body.Weight.Grip.Strength.Body.Weight
+Lab_Crabbe4_body_weight_Males.csv,Body.Weight,Male,0.044127,3,7,,ESLIM_022_001_709.Body.Weight.Grip.Strength.Body.Weight
+Lab_Crabbe4_grip_strength_Females.csv,grip.avg,Female,0.517258,3,7,x^(1/3),ESLIM_009_001_701.Grip.Strength.Forelimb.grip.strength.measurement.mean
+Lab_Crabbe4_grip_strength_Males.csv,grip.avg,Male,0.2953711,3,7,x^(1/3),ESLIM_009_001_701.Grip.Strength.Forelimb.grip.strength.measurement.mean
+Lab_Crowley2_body_weight_Males.csv,Body.Weight,Male,0.044127,3,7,,ESLIM_022_001_709.Body.Weight.Grip.Strength.Body.Weight
+Lab_Tarantino2_DistanceTraveled_Females.csv,OFTlarge_dist_10m_sec,Female,0.1291534,3,5,,ESLIM_007_001_701.Open.field.Distance.travelled...total
+Lab_Tarantino2_PercentCenter_Females.csv,OFTlarge_centertime_10m_percent,Female,0.2107968,3,7,log((x+0.1)/(100.1-x)),ESLIM_007_001_703.Open.field.Percentage.centre.time
+Lab_Tordoff3_body_weight_Females.csv,Body.Weight,Female,0.071,3,7,,ESLIM_022_001_709.Body.Weight.Grip.Strength.Body.Weight
+Lab_Tordoff3_body_weight_Males.csv,Body.Weight,Male,0.044127,3,7,,ESLIM_022_001_709.Body.Weight.Grip.Strength.Body.Weight
+Lab_Wiltshire2_DistanceTraveled_Males.csv,OFTsmall_dist_10m_sec,Male,0.1061416,3,5,,ESLIM_007_001_701.Open.field.Distance.travelled...total
+Lab_Wiltshire2_PercentCenter_Males.csv,OFTsmall_centertime_10m_percent,Male,0.01777157,3,7,log((x+0.1)/(100.1-x)),ESLIM_007_001_703.Open.field.Percentage.centre.time
+Lab_Wiltshire2_TST_Males.csv,tst_6min_percent,Male,,,,log((x+0.1)/(100.1-x)),
+,tst_6min_percent,Female,,,,,
+,tst_7min_percent,Male,,,,,
+,tst_7min_percent,Female,,,,,

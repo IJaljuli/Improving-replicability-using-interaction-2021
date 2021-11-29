@@ -3,22 +3,24 @@ library("tidyverse")
 library(readr)
 library(readxl)
 
-(files_names <- list.files(path = '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/',
+my.path <- '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial'
+
+(files_names <- list.files(path = paste0(my.path, '/Data - Original files/'),
                            pattern="*.xlsx"))
 
 
 for ( contemp_filename in files_names[8:12]){
   print( contemp_filename )
-  cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+  cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
   print(paste(excel_sheets(path = cln ), collapse = "', '"))
   # contemp_xl <- read_excel( path = cln )
 }
 
 contemp_filename <- "GxL_JAX_TST_females.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 tst_FM_JAX <- read_excel( path = cln, sheet = "Data", skip = 3) 
 contemp_filename <- "GxL_JAX_TST_males.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 tst_FM_JAX <- rbind( tst_FM_JAX, read_excel( path = cln, sheet = "Data", skip = 3) ) %>%
   group_by(strain, sex, treatment,id) %>%
   summarise('tst_6min_percent' = sum(s...17[Order<7])/(60*6),
@@ -38,10 +40,10 @@ tst_FM_JAX <- as_tibble(tst_FM_JAX) %>%
 
 
 contemp_filename <- "GxL_JAX_OF_females.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 oft_FM_JAX <- read_excel( path = cln, sheet = "Data") 
 contemp_filename <- "GxL_JAX_OF_males.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 oft_FM_JAX <- rbind( oft_FM_JAX, read_excel( path = cln, sheet = "Data") ) %>%
   rename('strain' = 'STRAIN', 'sex' = 'SEX', 'treatment' = 'TREATMENT',
          'sample' = 'SAMPLE', 'dist' = 'TOTAL DISTANCE (cm)',
@@ -86,7 +88,7 @@ oft20_FM_JAX <- oft_FM_JAX %>%
 
 
 contemp_filename <- "GxL_JAX_Grip_males.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 grip_M_JAX <- read_excel( path = cln, sheet = "Data") %>%
   mutate(grip.avg = `average of forepaws`, lab = 'JAX' ) %>%
   select( lab, treatment, sex, strain, grip.avg) %>%
@@ -101,7 +103,7 @@ grip_M_JAX <- read_excel( path = cln, sheet = "Data") %>%
           sex = recode(sex, 'f'='Female', 'm'='Male', 'F'='Female', 'M'='Male', 'female'='Female', 'male'='Male'))
 
 contemp_filename <- "GxL_JAX_Grip_females.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 grip_F_JAX <- read_excel( path = cln, sheet = "Data") %>%
   mutate(grip.avg = `average of forepaws`, lab = 'JAX' ) %>%
   select( lab, treatment, sex, strain, grip.avg) %>%
@@ -116,7 +118,7 @@ grip_F_JAX <- read_excel( path = cln, sheet = "Data") %>%
           sex = recode(sex, 'f'='Female', 'm'='Male', 'F'='Female', 'M'='Male', 'female'='Female', 'male'='Male'))
 
 contemp_filename <- "GxL_JAX_BW_females.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 bw_F_JAX <- read_excel( path = cln, sheet = "Data") %>%  mutate(`Body Weight` = NA, lab = 'JAX' )
 bw_F_JAX$`Body Weight` <- rowMeans(bw_F_JAX[,5:10], na.rm = T)
 bw_F_JAX <- bw_F_JAX %>%
@@ -131,7 +133,7 @@ bw_F_JAX <- bw_F_JAX %>%
           sex = recode(sex, 'f'='Female', 'm'='Male', 'F'='Female', 'M'='Male', 'female'='Female', 'male'='Male'))
 
 contemp_filename <- "GxL_JAX_BW_males.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 bw_M_JAX <- read_excel( path = cln, sheet = "Data") %>%  mutate(`Body Weight` = NA , lab = 'JAX')
 bw_M_JAX$`Body Weight` <- rowMeans(bw_M_JAX[,5:10], na.rm = T)
 bw_M_JAX <- bw_M_JAX %>%
@@ -147,7 +149,7 @@ bw_M_JAX <- bw_M_JAX %>%
 
 
 contemp_filename <- "tail suspension for 6 minutes.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 # cln_sheets <- c("male orgenized", "female orgenized")
 tst6_F_TAUM <- read_excel( path = cln, sheet = "female orgenized",skip = 3 )
 tst6_M_TAUM <- read_excel( path = cln, sheet = "male orgenized", skip = 3)
@@ -177,7 +179,7 @@ tst6_M_TAUM <- tst6_M_TAUM[,1:6] %>%
 
 
 contemp_filename <- "tail suspension for 7 min (002).xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 # cln_sheets <- c("male orgenized", "female orgenized")
 tst7_F_TAUM <- read_excel( path = cln, sheet = "female orgenized" ,skip = 3 )
 tst7_M_TAUM <- read_excel( path = cln, sheet = "male orgenized" ,skip = 3 )
@@ -203,7 +205,7 @@ mutate( lab = 'TAUM', tst_7min_percent = tst_7min_sec/(60*7)) %>%
           sex = recode(sex, 'f'='Female', 'm'='Male', 'F'='Female', 'M'='Male', 'female'='Female', 'male'='Male'))
 
 contemp_filename <- "Grip test final (2).xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 # cln_sheets <- c('Sheet1', 'Sheet2', 'Sheet3', 'Sheet4', 'Sheet5', 'Sheet6', 'Sheet8', 'Sheet9', 'all orgenized')
 grip_FM_TAUM <- read_excel( path = cln, sheet = 'all orgenized' , skip = 2) %>% mutate(grip.avg = NA) %>%
   filter( !is.na(`weight (gr)`))
@@ -222,7 +224,7 @@ grip_FM_TAUM <- grip_FM_TAUM[,c(1:5,11)] %>%
           sex = recode(sex, 'f'='Female', 'm'='Male', 'F'='Female', 'M'='Male', 'female'='Female', 'male'='Male'))
 
 contemp_filename <- "Mice TAUL 04.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 # cln_sheets <- c('Sheet1', 'Sheet2', 'Sheet3')
 all_FM_TAUL <- read_excel( path = cln, sheet = 'Sheet1' )
 all_F_TAUL <- all_FM_TAUL %>% filter(sex=='F') %>% 
@@ -302,7 +304,7 @@ hist(temp, breaks = 20, main = 'TAUL: Histogram of \n dist 20m - dist 10m')
 
 
 contemp_filename <- "open field 10 min.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 # cln_sheets <- c('Female orgenized', '27X27 Male orgenized', '50X50 Male orgenized')
 oft10_Flarge_TAUM <- read_excel( path = cln, sheet = 'Female orgenized',skip=3 )
 oft10_Mlarge_TAUM <- read_excel( path = cln, sheet = '50X50 Male orgenized' ,skip=3 )
@@ -351,7 +353,7 @@ oft10_Msmall_TAUM <- oft10_Msmall_TAUM %>%
 
 
 contemp_filename <- "open field 20 min NK.xlsx"
-cln <- paste0('~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial/Data - Original files/', contemp_filename)
+cln <- paste0(c(my.path, '/Data - Original files/', contemp_filename), collapse = '')
 # cln_sheets <- c('Female Orgenized', 'Male 27X27 Orgenized', 'Male 50X50 Orgenized')
 oft20_Flarge_TAUM <- read_excel( path = cln, sheet = 'Female Orgenized', skip = 3 )
 oft20_Mlarge_TAUM <- read_excel( path = cln, sheet = 'Male 50X50 Orgenized', skip = 3 )

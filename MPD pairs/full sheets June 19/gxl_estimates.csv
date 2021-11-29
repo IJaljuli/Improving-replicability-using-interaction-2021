@@ -1,0 +1,12 @@
+File name ,gamma estimator ,labs.int,strains.int,transformation
+Lab_Crabbe4_body_weight_Females.csv,1.85297E-08,3,7,
+Lab_Crabbe4_body_weight_Males.csv,0.0593418,3,7,
+Lab_Crabbe4_grip_strength_Females.csv,0.517258,3,7,x^(1/3)
+Lab_Crabbe4_grip_strength_Males.csv,0.29537,3,7,x^(1/3)
+Lab_Crowley2_body_weight_Males.csv,0.0593418,3,7,
+Lab_Tarantino2_DistanceTraveled_Females.csv,0.0840503,3,5,
+Lab_Tarantino2_PercentCenter_Females.csv,0.210796,3,7,log((x+0.1)/(100.1-x))
+Lab_Wiltshire2_DistanceTraveled_Males.csv,0.121383,3,5,
+Lab_Wiltshire2_PercentCenter_Males.csv,0.0177716,3,7,log((x+0.1)/(100.1-x))
+Lab_Tordoff3_body_weight_Females.csv,1.85297E-08,3,7,
+Lab_Tordoff3_body_weight_Males.csv,0.0593418,3,7,
