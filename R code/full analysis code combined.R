@@ -1,6 +1,9 @@
-my.path <- '/Users/Iman/Documents/GitHub/Improving-replicability-using-interaction-2021/'
+# my.path <- '~/Documents/GitHub/Improving-replicability-using-interaction-2021/'
+# source(paste0(my.path, 'R code/Analysis_Functions.R'))
 
-source(paste0(my.path, 'R code/Analysis_Functions.R'))
+# my.path <- getwd()
+setwd('/Users/imanjljule/Documents/Improving-replicability-using-interaction-2021')
+source('R code/Analysis_Functions.R')
 
 compute.df.sater <- function(s2int,df.int,s2pooled,n1,n2){
   inv.v <- (((1/n1+1/n2)*s2pooled)^2*1/(n1+n2-2)+(2*s2int)^2*1/df.int)/
@@ -27,7 +30,7 @@ alpha.threshold2 = 0.05
 
 
 ### import gxl estimates from IMPC
-gxl.info <- read.csv(paste0(my.path, 'gxl_estimates_from_IMPC.csv'),header = T , stringsAsFactors = F)
+gxl.info <- read.csv(paste0('gxl_estimates_from_IMPC.csv'),header = T , stringsAsFactors = F)
 
 
 
@@ -42,13 +45,13 @@ names(gxl2.fac) <-  names(gxl.S) <- names(gxl.L) <-
 ##### TAU-JAX import after manipulation
 ##############
 
-OFT_combined_data <- read_csv(file = paste0(my.path, 'OFT_combined_data.csv'))
+OFT_combined_data <- read_csv(file = paste0( 'OFT_combined_data.csv'))
 
 
-TST_combined_data <- read_csv(file = paste0(my.path, 'TST_combined_data.csv')) %>% select(-c('...1'))
-bw_combined_data <- read_csv(file = paste0(my.path, 'bw_combined_data.csv')) %>% 
+TST_combined_data <- read_csv(file = paste0( 'TST_combined_data.csv')) %>% select(-c('...1'))
+bw_combined_data <- read_csv(file = paste0( 'bw_combined_data.csv')) %>% 
   rename('Body.Weight'= 'Body Weight')
-grip_combined_data <- read_csv(file = paste0(my.path, 'grip_combined_data.csv'))
+grip_combined_data <- read_csv(file = paste0( 'grip_combined_data.csv'))
 
 t.add <-  OFT_combined_data %>% 
   filter(  name %in% c('OFTlarge_centertime_20m_percent', 'OFTlarge_centertime_10m_percent', 'OFTsmall_centertime_10m_percent', 'OFTsmall_centertime_20m_percent'),
@@ -116,7 +119,7 @@ all_data_sets <- do.call(what = rbind, all_data_sets_list) %>%
   filter( ! (strain %in% c('C3H/HeJ'))) %>%
   mutate(strain = factor(strain, levels = c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  ')))
 
-# all_data_gxlEstimates <- read_csv(my.path, 'all_data_gxlEstimates.csv') %>%
+# all_data_gxlEstimates <- read_csv( 'all_data_gxlEstimates.csv') %>%
 #   pivot_longer(cols = c(error_sd_value,  int_sd_value), names_to = 'value_type',values_to = 'value') %>%
 #   mutate(x = recode(value_type,
 #                     'int_sd_value'= ' '     , 'error_sd_value'='  ')) %>%
@@ -233,7 +236,7 @@ write_csv(all_data_analyses_list    , path = 'TAUJAX_analyses_list.csv')
 write_csv(all_data_means %>% arrange(lab, sex, measure.name, treatment ), 'TAUJAX_means.csv')
 
 
-gxl_IMPC_all <- read_csv(paste0(my.path, 'IMPC_gxl_estimates.csv')) %>%
+gxl_IMPC_all <- read_csv(paste0( 'IMPC_gxl_estimates.csv')) %>%
   dplyr::select(-c('...1')) %>% rename('IMPC_code' = 'X1')
 
 ##################
@@ -414,14 +417,14 @@ write_csv(all.contrasts2, file = 'Floxitine effect per strain: TAUJAX_theewayANO
 ### End: post hoc of Floxitine effect with gxl
 
 ### Begin: Tests of three-way interaction effect
-gxl_TAUJAX <- read_csv( paste0(my.path, 'TAUJAX_DFs_gxl.csv')) %>% 
+gxl_TAUJAX <- read_csv( paste0( 'TAUJAX_DFs_gxl.csv')) %>% 
   rename( 'measure.name' = 'measure.name.MPDname', 'treatment' = 'treatment.MPDname', "gxl2.TAUJAX"="gxl2.fac") 
 gxl_TAUJAX <- gxl_TAUJAX %>% arrange(measure.name,treatment, sex ) %>%
   # dplyr::select(measure.name,treatment,sex,gxl2.TAUJAX) %>% 
   mutate(gxl.TAUJAX=sqrt(gxl2.TAUJAX))
 gxl_TAUJAX <- gxl_TAUJAX %>%
   dplyr::select(measure.name,treatment,sex,gxl.TAUJAX)
-gxl_IMPC <- read_csv( paste0(my.path, 'gxl_estimates_from_IMPC.csv')) %>%
+gxl_IMPC <- read_csv( paste0( 'gxl_estimates_from_IMPC.csv')) %>%
   rename("gxl2.IMPC" = "gamma2 estimator", 'measure.name'='MPD_code') %>%  dplyr::select(`File name`, measure.name, sex, IMPC_code, gxl2.IMPC)
 gxl_IMPC <- gxl_IMPC %>% left_join(gxl_IMPC_all) %>% mutate(Sd_interaction = sqrt(S2_interaction))
 gxl_IMPC <- gxl_IMPC %>% 
@@ -457,6 +460,7 @@ file.names <- c("Lab_Wiltshire2_DistanceTraveled_Males.csv",
                 "Lab_Wiltshire2_PercentCenter_Males.csv",
                 "Lab_Wiltshire2_TST_Males.csv" )
 
+wd <- paste0( 'MPD pairs/MPD data - arranged IJ/')
 pairs.all <-  list()
 for (file.name in file.names){
   dd <- read_csv(file = paste0(wd,file.name),skip_empty_rows = T)
@@ -506,8 +510,8 @@ for (file.name in file.names){
                              'BALB' = 'BALB/cJ','BALB ' = 'BALB/cJ','Balbc' = 'BALB/cJ', 'c57' = 'C57BL/6J',
                              'C57' = 'C57BL/6J','c57bl' = 'C57BL/6J','C57bl' = 'C57BL/6J',
                              'CBA ' = 'CBA/J','CBA' = 'CBA/J',
-                             'DBA' = 'DBA/2J' ,'SWR ' = 'SWR/J', 'SWR'='SWR/J')) %>%
-    filter(strain %in% c('BTBR', 'BALB/cJ', 'C57BL/6J', 'CBA/J', 'DBA/2J', 'SWR/J') ) # "C3H/HeJ" 
+                             'DBA' = 'DBA/2J' ,'SWR ' = 'SWR/J', 'SWR'='SWR/J')) %>% 
+    filter(strain %in% c('BTBR', 'BALB/cJ', 'C57BL/6J', 'CBA/J', 'DBA/2J', 'SWR/J') ) # "C3H/HeJ"
   
   if( dd$lab[1]=="Lab_Crabbe4_grip_strength_Females.csv"){
     dd <- dd %>%  filter(!is.na(y)) %>%  filter(y>0)
@@ -616,7 +620,7 @@ pairs.all <- do.call(rbind, pairs.all)  %>%
 
 dd.means.filenames <- pairs.treatment.all <- list()
 all.pairs.comps <- merging.info <- NULL
-wd <- paste0(my.path, 'MPD pairs/MPD data - arranged IJ/')
+wd <- paste0( 'MPD pairs/MPD data - arranged IJ/')
 (file.names <- list.files(path = wd, pattern = 'Lab_*'))
 for (file.name in file.names){
   dd <- read_csv(file = paste0(wd,file.name),skip_empty_rows = T)
@@ -666,7 +670,7 @@ for (file.name in file.names){
                              'BALB' = 'BALB/cJ','BALB ' = 'BALB/cJ','Balbc' = 'BALB/cJ', 'c57' = 'C57BL/6J',
                              'C57' = 'C57BL/6J','c57bl' = 'C57BL/6J','C57bl' = 'C57BL/6J',
                              'CBA ' = 'CBA/J','CBA' = 'CBA/J',
-                             'DBA' = 'DBA/2J' ,'SWR ' = 'SWR/J', 'SWR'='SWR/J')) %>%
+                             'DBA' = 'DBA/2J' ,'SWR ' = 'SWR/J', 'SWR'='SWR/J')) %>% 
     filter(strain %in% c('BTBR', 'BALB/cJ', 'C57BL/6J', 'CBA/J', 'DBA/2J', 'SWR/J') ) # "C3H/HeJ" 
   
   if( dd$lab[1]=="Lab_Crabbe4_grip_strength_Females.csv"){
@@ -796,7 +800,7 @@ dd.means.filenames <- do.call(what = rbind, dd.means.filenames) %>%
   separate(col = 'y.name', into = c('measure.name.MPD', 'treatment'), sep = ':') 
 dd.means.filenames <-  dd.means.filenames %>%
   mutate( mean = round(mean, digits = 5),  sd = round(sd, digits = 5))
-write_csv(dd.means.filenames)
+# write_csv(dd.means.filenames)
 
 
 all.pairs.comps <- all.pairs.comps %>%
@@ -836,12 +840,12 @@ set_bar_begin <- all_data_sets %>% filter(measure.name%in%c("Body.Weight")) %>%
 
 temp_dat <- temp_dat %>% left_join(set_bar_begin) %>%
   mutate(bar_end = value+bar_begin)%>%
-  mutate(measure.name='Body Weight')
+  mutate(measure.name='Mean Body Weight (gr)')
 temp_dat2 <- temp_dat %>%
   pivot_longer(cols = c(bar_begin, bar_end), names_to = 'bars', values_to = 'bars_lims')
 
 bodyweight_intplot <- all_data_sets %>% filter(measure.name%in%c("Body.Weight")) %>%
-  mutate(measure.name='Body Weight') %>%
+  mutate(measure.name='Mean Body Weight (gr)') %>%
   ggplot(data = .) +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="point") +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="line")+
@@ -854,12 +858,7 @@ bodyweight_intplot <- all_data_sets %>% filter(measure.name%in%c("Body.Weight"))
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
-
-
-
-
-
+  ylab(element_blank()) + xlab('Genotype')
 
 
 temp_dat <- subset(all_data_gxlEstimates, measure %in% c("grip.avg") )
@@ -871,13 +870,13 @@ set_bar_begin <- all_data_sets %>% filter(measure.name%in%c("grip.avg")) %>%
 
 temp_dat <- temp_dat %>% left_join(set_bar_begin) %>%
   mutate(bar_end = value+bar_begin) %>%
-  mutate(measure.name = "Grip Strength (cube root)")
+  mutate(measure.name = "Cube Root of Grip Strength (gr)")
 temp_dat2 <- temp_dat %>%
   pivot_longer(cols = c(bar_begin, bar_end), names_to = 'bars', values_to = 'bars_lims')
 
 gripavg_intplot <- all_data_sets %>% 
   filter(measure.name%in%c( "grip.avg" )) %>%
-  mutate(measure.name = "Grip Strength (cube root)") %>%
+  mutate(measure.name = "Cube Root of Grip Strength (gr)") %>%
   ggplot(data = .) +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="point") +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="line")+
@@ -889,7 +888,7 @@ gripavg_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 
 # dev.off()
@@ -904,13 +903,13 @@ set_bar_begin <- all_data_sets %>% filter(measure.name%in%c("tst_7min_percent"))
   summarise(bar_begin = quantile(bar_begin,p=0.1))
 temp_dat <- temp_dat %>% left_join(set_bar_begin) %>%
   mutate(bar_end = value+bar_begin) %>%   
-  mutate(measure.name = 'Tail Suspension (logit), 7 min')
+  mutate(measure.name = 'Mean of Logit Tail Suspension\n(% of 7 min)')
 temp_dat2 <- temp_dat %>%
   pivot_longer(cols = c(bar_begin, bar_end), names_to = 'bars', values_to = 'bars_lims')
 
 tst7_intplot <- all_data_sets %>%
   filter(measure.name %in% c("tst_7min_percent")) %>%
-  mutate(measure.name = 'Tail Suspension (logit), 7 min') %>%
+  mutate(measure.name = 'Mean of Logit Tail Suspension\n(% of 7 min)') %>%
   ggplot(data = .) +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="point") +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="line")+
@@ -923,7 +922,7 @@ tst7_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free') +
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 # dev.off()
 # pdf('interactions_plot_TAUJAX_page3.pdf', width = 14)
@@ -937,13 +936,13 @@ set_bar_begin <- all_data_sets %>% filter(measure.name%in%c( "OFTsmall_centertim
   summarise(bar_begin = quantile(bar_begin,p=0.1))
 temp_dat <- temp_dat %>% left_join(set_bar_begin) %>%
   mutate(bar_end = value+bar_begin)%>%
-  mutate( measure.name = recode(measure.name ,  "OFTsmall_centertime_10m_percent"= 'CT% (logit), small arena, 10 min' )  )
+  mutate( measure.name = recode(measure.name ,  "OFTsmall_centertime_10m_percent"= 'Mean Logit Center Time\n10 Minutes in Small Arena' )  )
 temp_dat2 <- temp_dat %>%
   pivot_longer(cols = c(bar_begin, bar_end), names_to = 'bars', values_to = 'bars_lims')
 
 CT10_small_intplot <- all_data_sets %>%
   filter(measure.name %in% c( "OFTsmall_centertime_10m_percent")) %>%
-  mutate( measure.name = recode(measure.name , "OFTsmall_centertime_10m_percent"= 'CT% (logit), small arena, 10 min' )  ) %>% 
+  mutate( measure.name = recode(measure.name , "OFTsmall_centertime_10m_percent"= 'Mean Logit Center Time\n10 Minutes in Small Arena' )  ) %>% 
   ggplot(data = .) +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="point") +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="line")+
@@ -956,7 +955,7 @@ CT10_small_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 temp_dat <- subset(all_data_gxlEstimates, measure %in% c("OFTlarge_centertime_10m_percent") ) %>%
   rename('measure.name' = 'measure')
@@ -967,13 +966,13 @@ set_bar_begin <- all_data_sets %>% filter(measure.name%in%c("OFTlarge_centertime
   summarise(bar_begin = quantile(bar_begin,p=0.1))
 temp_dat <- temp_dat %>% left_join(set_bar_begin) %>%
   mutate(bar_end = value+bar_begin)%>%
-  mutate( measure.name = recode(measure.name , "OFTlarge_centertime_10m_percent" = 'CT% (logit), large arena, 10 min')  )
+  mutate( measure.name = recode(measure.name , "OFTlarge_centertime_10m_percent" = 'Mean Logit Center Time\n10 Minutes in Large Arena')  )
 temp_dat2 <- temp_dat %>%
   pivot_longer(cols = c(bar_begin, bar_end), names_to = 'bars', values_to = 'bars_lims')
 
 CT10_large_intplot <- all_data_sets %>%
   filter(measure.name %in% c("OFTlarge_centertime_10m_percent")) %>%
-  mutate( measure.name = recode(measure.name , "OFTlarge_centertime_10m_percent" = 'CT% (logit), large arena, 10 min')  ) %>% 
+  mutate( measure.name = recode(measure.name , "OFTlarge_centertime_10m_percent" = 'Mean Logit Center Time\n10 Minutes in Large Arena')  ) %>% 
   ggplot(data = .) +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="point") +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="line")+
@@ -986,7 +985,7 @@ CT10_large_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 temp_dat <- subset(all_data_gxlEstimates, measure %in% c("OFTsmall_dist_10m_sec") )%>%
   rename('measure.name' = 'measure')
@@ -999,14 +998,14 @@ set_bar_begin <- all_data_sets %>% filter(measure.name%in%c( "OFTsmall_dist_10m_
 
 temp_dat <- temp_dat %>% left_join(set_bar_begin) %>%
   mutate(bar_end = value+bar_begin) %>%
-  mutate( measure.name = recode(measure.name , "OFTsmall_dist_10m_sec" = 'DT, small arena, 10 min' )  )
+  mutate( measure.name = recode(measure.name , "OFTsmall_dist_10m_sec" = 'Mean Distance Travelled (cm)\n10 Minutes in Small Arena' )  )
 
 temp_dat2 <- temp_dat %>%
   pivot_longer(cols = c(bar_begin, bar_end), names_to = 'bars', values_to = 'bars_lims')
 
 DT10_small_intplot <- all_data_sets %>%
   filter(measure.name %in% c("OFTsmall_dist_10m_sec")) %>%
-  mutate( measure.name = recode(measure.name ,"OFTsmall_dist_10m_sec" = 'DT, small arena, 10 min' )  ) %>% 
+  mutate( measure.name = recode(measure.name ,"OFTsmall_dist_10m_sec" = 'Mean Distance Travelled (cm)\n10 Minutes in Small Arena' )  ) %>% 
   ggplot(data = .) +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="point") +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="line")+
@@ -1019,7 +1018,7 @@ DT10_small_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 
 
@@ -1034,14 +1033,14 @@ set_bar_begin <- all_data_sets %>% filter(measure.name%in%c("OFTlarge_dist_10m_s
 
 temp_dat <- temp_dat %>% left_join(set_bar_begin) %>%
   mutate(bar_end = value+bar_begin) %>%
-  mutate( measure.name = recode(measure.name , "OFTlarge_dist_10m_sec" = 'DT (Cube root), large arena, 10 min' )  )
+  mutate( measure.name = recode(measure.name , "OFTlarge_dist_10m_sec" = 'Mean Distance Travelled (cm)\n10 Minutes in Large Arena' )  )
 
 temp_dat2 <- temp_dat %>%
   pivot_longer(cols = c(bar_begin, bar_end), names_to = 'bars', values_to = 'bars_lims')
 
 DT10_large_intplot <- all_data_sets %>%
   filter(measure.name %in% c("OFTlarge_dist_10m_sec")) %>%
-  mutate( measure.name = recode(measure.name , "OFTlarge_dist_10m_sec" = 'DT (Cube root), large arena, 10 min' )  ) %>% 
+  mutate( measure.name = recode(measure.name , "OFTlarge_dist_10m_sec" = 'Mean Distance Travelled (cm)\n10 Minutes in Large Arena' )  ) %>% 
   ggplot(data = .) +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="point") +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="line")+
@@ -1054,7 +1053,7 @@ DT10_large_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 
 temp_dat <- subset(all_data_gxlEstimates, measure %in% c("OFTsmall_centertime_20m_percent") ) %>%
@@ -1085,7 +1084,7 @@ CT20_small_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 
 temp_dat <- subset(all_data_gxlEstimates, measure %in% c("OFTlarge_centertime_20m_percent") ) %>%
@@ -1116,7 +1115,7 @@ CT20_large_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 
 temp_dat <- subset(all_data_gxlEstimates, measure %in% c("OFTlarge_dist_20m_sec") )%>%
@@ -1151,7 +1150,7 @@ DT20_large_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 
 temp_dat <- subset(all_data_gxlEstimates, measure %in% c( "OFTsmall_dist_20m_sec") )%>%
@@ -1165,14 +1164,14 @@ set_bar_begin <- all_data_sets %>% filter(measure.name%in%c("OFTsmall_dist_20m_s
 
 temp_dat <- temp_dat %>% left_join(set_bar_begin) %>%
   mutate(bar_end = value+bar_begin) %>%
-  mutate( measure.name = recode(measure.name , "OFTsmall_dist_20m_sec" = 'DT, small arena, 20 min' )  )
+  mutate( measure.name = recode(measure.name , "OFTsmall_dist_20m_sec" = 'Distance Travelled (cm)\n20 Minutes in Small Arena' )  )
 
 temp_dat2 <- temp_dat %>%
   pivot_longer(cols = c(bar_begin, bar_end), names_to = 'bars', values_to = 'bars_lims')
 
 DT20_small_intplot <- all_data_sets %>%
   filter(measure.name %in% c( "OFTsmall_dist_20m_sec")) %>%
-  mutate( measure.name = recode(measure.name ,  "OFTsmall_dist_20m_sec" = 'DT, small arena, 20 min' )  ) %>% 
+  mutate( measure.name = recode(measure.name ,  "OFTsmall_dist_20m_sec" = 'Distance Travelled (cm)\n20 Minutes in Small Arena' )  ) %>% 
   ggplot(data = .) +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="point") +
   stat_summary(aes(x = strain, y = y, colour = lab, group=lab),fun=mean, geom="line")+
@@ -1185,205 +1184,9 @@ DT20_small_intplot <- all_data_sets %>%
   facet_grid(measure.name~treatment+sex, scales = 'free')+
   scale_x_discrete(limits=c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  '))+
   theme(axis.text.x = element_text(angle=90))+
-  ylab('Mean measure value')
+  ylab(element_blank()) + xlab('Genotype')
 
 
-
-
-
-
-
-
-
-library(gridExtra)
-cols <- c("TAUM"='#F8766D', "TAUL"='#00BA38')
-
-
-
-pdf('int_and_boxplots_pg1.pdf', width = 10)
-grid.arrange(Bodyweight_boxplot +
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(),
-                     axis.text.y = element_text(angle=90), 
-                     legend.position = 'top', 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             bodyweight_intplot + scale_color_discrete('') + theme(legend.position = 'none', 
-                                                                   strip.text.x = element_blank(),
-                                                                   strip.background.x = element_blank(),
-                                                                   axis.text.y = element_text(angle=90), 
-                                                                   plot.margin = unit(c(0,0,0,.1),'cm')))
-
-dev.off()
-
-pdf('int_and_boxplots_pg2.pdf', width = 10)
-grid.arrange( grip_boxplot +
-                theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                      axis.title.x = element_blank(),
-                      axis.text.y = element_text(angle=90), 
-                      legend.position = 'top', 
-                      plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-              gripavg_intplot + scale_color_discrete('') + 
-                theme(legend.position = 'none', 
-                      strip.text.x = element_blank(),
-                      axis.text.y = element_text(angle=90),
-                      strip.background.x = element_blank(), 
-                      plot.margin = unit(c(0,0,0,.1),'cm')))
-
-
-dev.off()
-
-pdf('int_and_boxplots_pg3.pdf', width = 10)
-grid.arrange(TST7_boxplot+
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(), 
-                     legend.position = 'top',
-                     axis.text.y = element_text(angle=90), 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             tst7_intplot +  theme(legend.position = 'none', 
-                                   strip.text.x = element_blank(),
-                                   strip.background.x = element_blank(), 
-                                   plot.margin = unit(c(0,0,0,.1),'cm'),
-                                   axis.text.y = element_text(angle=90)))
-
-dev.off()
-
-pdf('int_and_boxplots_pg4.pdf', width = 10)
-grid.arrange(CTsmall10_boxplot +
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(), 
-                     legend.position = 'top',
-                     axis.text.y = element_text(angle=90), 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             CT10_small_intplot + scale_color_manual('',values = cols) + 
-               theme(legend.position = 'none', 
-                     strip.text.x = element_blank(),
-                     strip.background.x = element_blank(), 
-                     plot.margin = unit(c(0,0,0,.1),'cm'),
-                     axis.text.y = element_text(angle=90)))
-
-
-
-dev.off()
-
-pdf('int_and_boxplots_pg5.pdf', width = 10)
-
-grid.arrange(CTlarge10_boxplot + 
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(), 
-                     legend.position = 'top',
-                     axis.text.y = element_text(angle=90), 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             CT10_large_intplot + theme(legend.position = 'none', 
-                                        strip.text.x = element_blank(),
-                                        strip.background.x = element_blank(), 
-                                        plot.margin = unit(c(0,0,0,.1),'cm'),
-                                        axis.text.y = element_text(angle=90)))
-
-dev.off()
-
-pdf('int_and_boxplots_pg6.pdf', width = 10)
-grid.arrange(DTlarge10_boxplot + 
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(), 
-                     legend.position = 'top',
-                     axis.text.y = element_text(angle=90), 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             DT10_large_intplot + theme(legend.position = 'none', 
-                                        strip.text.x = element_blank(),
-                                        strip.background.x = element_blank(), 
-                                        plot.margin = unit(c(0,0,0,.1),'cm'),
-                                        axis.text.y = element_text(angle=90)))
-
-
-
-dev.off()
-
-pdf('int_and_boxplots_pg7.pdf', width = 10)
-grid.arrange(CTlarge20_boxplot + 
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(), 
-                     legend.position = 'top',
-                     axis.text.y = element_text(angle=90), 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             CT20_large_intplot + theme(legend.position = 'none', 
-                                        strip.text.x = element_blank(),
-                                        strip.background.x = element_blank(), 
-                                        plot.margin = unit(c(0,0,0,.1),'cm'),
-                                        axis.text.y = element_text(angle=90)))
-
-dev.off()
-
-pdf('int_and_boxplots_pg8.pdf', width = 10)
-grid.arrange(CTsmall20_boxplot + 
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(), 
-                     legend.position = 'top',
-                     axis.text.y = element_text(angle=90), 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             CT20_small_intplot + scale_color_manual('',values = cols) +
-               theme(legend.position = 'none', 
-                     strip.text.x = element_blank(),
-                     strip.background.x = element_blank(), 
-                     plot.margin = unit(c(0,0,0,.1),'cm'),
-                     axis.text.y = element_text(angle=90)))
-
-dev.off()
-
-pdf('int_and_boxplots_pg9.pdf', width = 10)
-cols <- c("TAUM"='#F8766D', "TAUL"='#00BA38', "JAX"='#619CFF')
-
-grid.arrange(DTlarge20_boxplot + 
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(), 
-                     legend.position = 'top',
-                     axis.text.y = element_text(angle=90), 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             DT20_large_intplot + scale_color_manual('',values = cols) +
-               theme(legend.position = 'none', 
-                     strip.text.x = element_blank(),
-                     strip.background.x = element_blank(), 
-                     plot.margin = unit(c(0,0,0,.1),'cm'),
-                     axis.text.y = element_text(angle=90)))
-
-
-
-dev.off()
-
-pdf('int_and_boxplots_pg10.pdf', width = 10)
-grid.arrange(DTsmall20_boxplot + 
-               theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                     axis.title.x = element_blank(), 
-                     legend.position = 'top',
-                     axis.text.y = element_text(angle=90), 
-                     plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-             DT20_small_intplot + scale_color_manual('',values = cols) +
-               theme(legend.position = 'none', 
-                     strip.text.x = element_blank(),
-                     strip.background.x = element_blank(), 
-                     plot.margin = unit(c(0,0,0,.1),'cm'),
-                     axis.text.y = element_text(angle=90)))
-
-
-
-dev.off()
-
-pdf('int_and_boxplots_pg11.pdf', width = 10)
-grid.arrange( DTsmall10_boxplot + 
-                theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
-                      axis.title.x = element_blank(), 
-                      legend.position = 'top',
-                      axis.text.y = element_text(angle=90), 
-                      plot.margin = unit(c(0,0,0,.1),'cm') ) ,
-              DT10_small_intplot + scale_color_manual('',values = cols) +
-                theme(legend.position = 'none', 
-                      strip.text.x = element_blank(),
-                      strip.background.x = element_blank(), 
-                      plot.margin = unit(c(0,0,0,.1),'cm'),
-                      axis.text.y = element_text(angle=90)))
-
-
-
-dev.off()
 
 
 
@@ -1395,10 +1198,10 @@ dev.off()
 
 MPD_all_pairs <- all.pairs.comps %>% # read_csv( 'MPD_all_pairs_analysis.csv') %>% 
   rename('strain.1'='strain1', 'strain.2'='strain2')
-# gxl_IMPC_all <- read_csv(my.path, 'IMPC_gxl_estimates.csv') %>%
+# gxl_IMPC_all <- read_csv( 'IMPC_gxl_estimates.csv') %>%
 #   dplyr::select(-c('...1')) %>% rename('IMPC_code' = 'X1')
 
-gxl_IMPC <- read_csv(paste0(my.path, 'gxl_estimates_from_IMPC.csv')) %>%
+gxl_IMPC <- read_csv(paste0( 'gxl_estimates_from_IMPC.csv')) %>%
   rename("gxl2.IMPC" = "gamma2 estimator", 'measure.name'='MPD_code') %>%
   dplyr::select(`File name`, measure.name, sex, IMPC_code, gxl2.IMPC)
 gxl_IMPC <- gxl_IMPC %>% left_join(gxl_IMPC_all) %>% mutate(gxl2.IMPC = S2_interaction/S2_error )
@@ -1409,23 +1212,23 @@ gxl_IMPC <- gxl_IMPC %>% rename("S2_interaction IMPC"="S2_interaction",     "S2_
   distinct() %>%
   mutate(treatment='Control') # %>% filter(!is.na(IMPC_code))
 
-TAUJAX_all_data_analyses <-  all_data_analyses_list %>% # read_csv(my.path, 'TAUJAX_analyses_list.csv') %>%
+TAUJAX_all_data_analyses <-  all_data_analyses_list %>% # read_csv( 'TAUJAX_analyses_list.csv') %>%
   # select(-c('strain.1...2','strain.2...3'))%>% rename('strain.1'='strain.1...8', 'strain.2'='strain.2...9') %>%
   dplyr::select(measure.name,treatment,sex,strain.1,strain.2, `Diff Multi`,`t-value REML`,`pval REML`)%>%
   distinct() %>%
   rename('t-value REML TAUJAX'='t-value REML', 'pval REML TAUJAX'='pval REML', 'Diff Multi TAUJAX' = 'Diff Multi')
 
-gxl_TAUJAX <- dfs_TAUJAX %>% # read_csv(my.path, 'TAUJAX_DFs_gxl.csv') %>% 
+gxl_TAUJAX <- dfs_TAUJAX %>% # read_csv( 'TAUJAX_DFs_gxl.csv') %>% 
   rename( 'measure.name' = 'measure.name.MPDname', 'treatment' = 'treatment.MPDname', "gxl2.TAUJAX"="gxl2.fac") %>%
   dplyr::select(measure.name, treatment, sex, df1_TAUJAX, df2_TAUJAX, gxl2.TAUJAX)
 
 
 
-gxl_TAUJAX2 <- all_data_gxlEstimates %>% # read_csv(my.path, 'all_data_gxlEstimates.csv') %>% 
+gxl_TAUJAX2 <- all_data_gxlEstimates %>% # read_csv( 'all_data_gxlEstimates.csv') %>% 
   rename('measure.name' = 'measure') %>%
   distinct()
 
-# all_data_gxlEstimates <- all_data_gxlEstimates %>% # read_csv(my.path, 'all_data_gxlEstimates.csv') %>% 
+# all_data_gxlEstimates <- all_data_gxlEstimates %>% # read_csv( 'all_data_gxlEstimates.csv') %>% 
 #   rename('measure.name' = 'measure') %>%
 #   select(-c("value_type" ,"value",'x')) %>%
 #   distinct()
@@ -1436,16 +1239,16 @@ gxl_TAUJAX <- gxl_TAUJAX %>% pivot_wider(id_cols = c("measure.name", "treatment"
   mutate( `S2_interaction TAUJAX`= `  Interaction SD`^2, `S2_error TAUJAX`=`   Error SD`^2) %>%
   dplyr::select(measure.name, treatment, sex, df1_TAUJAX, gxl2.TAUJAX,`S2_interaction TAUJAX` ,`S2_error TAUJAX` )
 
-IMPC_all_data_analyses <- rbind(read_csv(my.path, 'IMPC_analyses_list - Males.csv'),
-                                read_csv(my.path, 'IMPC_analyses_list - Females.csv')) %>%
+IMPC_all_data_analyses <- rbind(read_csv( 'IMPC_analyses_list - Males.csv'),
+                                read_csv( 'IMPC_analyses_list - Females.csv')) %>%
   rename(IMPC_code = measure.name)%>%
   dplyr::select(strain.1, strain.2,`Diff Multi`, `t-value REML`, `pval REML` ) %>%
   rename('t-value REML IMPC'='t-value REML', 'pval REML IMPC'='pval REML', 'Diff Multi IMPC' = 'Diff Multi') %>%
   distinct()
 
 
-IMPC_significance_of_strains <- rbind(read_csv(my.path, 'IMPC_strain_significance_Male.csv') ,
-                                      read_csv(my.path, 'IMPC_strain_significance_Female.csv') ) %>%
+IMPC_significance_of_strains <- rbind(read_csv( 'IMPC_strain_significance_Male.csv') ,
+                                      read_csv( 'IMPC_strain_significance_Female.csv') ) %>%
   rename('signif strain by IMPC'='signif strain')%>% mutate(treatment = 'Control')
 
 gxl_TAUJAX <- gxl_TAUJAX %>% # select(-c('value_type', 'value','x')) %>% 
@@ -2101,8 +1904,8 @@ for (file.name in file.names){
                              'BALB' = 'BALB/cJ','BALB ' = 'BALB/cJ','Balbc' = 'BALB/cJ', 'c57' = 'C57BL/6J',
                              'C57' = 'C57BL/6J','c57bl' = 'C57BL/6J','C57bl' = 'C57BL/6J',
                              'CBA ' = 'CBA/J','CBA' = 'CBA/J',
-                             'DBA' = 'DBA/2J' ,'SWR ' = 'SWR/J', 'SWR'='SWR/J')) # %>%
-    # filter(!(strain %in% c('BTBR', 'BALB/cJ', 'C57BL/6J', 'CBA/J', 'DBA/2J', 'SWR/J') )) # "C3H/HeJ" 
+                             'DBA' = 'DBA/2J' ,'SWR ' = 'SWR/J', 'SWR'='SWR/J')) %>%
+   filter(!(strain %in% c('BTBR', 'BALB/cJ', 'C57BL/6J', 'CBA/J', 'DBA/2J', 'SWR/J') )) # "C3H/HeJ" 
   
   if( dd$lab[1]=="Lab_Crabbe4_grip_strength_Females.csv"){
     dd <- dd %>%  filter(!is.na(y)) %>%  filter(y>0)
@@ -2251,10 +2054,13 @@ ggplot(threewya.aov.resuls.TAUJAX, aes(x = measure.name , y = `Gamma estimate`,
                                        color =  Source , shape = Source, size = Source ) ) +
   geom_point() +
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = 'bottom') +
+        legend.position = 'right',
+        panel.background = element_rect(fill ='grey95')) +
   scale_shape_manual(values = c(0,1,2,5)) +
-  scale_size_manual(values = 2*c(1.5,2,2.5,0.8))+
-  scale_color_manual(values = c(6,3,2,4))+ 
+  scale_size_manual(values = 2*c(1.5,2,1.5,0.8))+
+  scale_color_manual(values = c('#FF7F0E','blue','darkred','black'))+ 
   coord_flip()+
+  # theme_light()+
+  
   xlab(NULL)
 dev.off()

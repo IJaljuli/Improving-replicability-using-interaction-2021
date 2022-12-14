@@ -3,7 +3,8 @@ library("tidyverse")
 library(readr)
 library(readxl)
 
-my.path <- '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial'
+# my.path <- '~/Library/Mobile Documents/com~apple~CloudDocs/Research proposal files/TAU_JAX_trial'
+my.path <- '/Users/imanjljule/Documents/Improving-replicability-using-interaction-2021'
 
 (files_names <- list.files(path = paste0(my.path, '/Data - Original files/'),
                            pattern="*.xlsx"))
@@ -518,6 +519,10 @@ ggplot(OFT_combined_data) +
   scale_y_log10()
 write.csv(OFT_combined_data, file = 'OFT_combined_data.csv')
 
+OFT_sampleSize <- OFT_combined_data %>% group_by(name, treatment, sex, lab, strain ) %>% 
+  summarise(`sample size` = n())
+write.csv(OFT_sampleSize, file = 'OFT_sampleSize.csv')
+
 
 OFT_combined_data %>% 
   filter(name %in% c('OFTsmall_dist_10m_sec','OFTsmall_dist_20m_sec','OFTlarge_dist_10m_sec','OFTlarge_dist_20m_sec'),
@@ -552,6 +557,13 @@ TST_combined_data <- bind_rows(tst_M_TAUL, tst_F_TAUL, tst_FM_JAX, tst6_F_TAUM, 
 
 write.csv(TST_combined_data, file = 'TST_combined_data.csv')
 
+TST_sampleSize <- TST_combined_data %>% 
+  pivot_longer(cols = c("tst_6min_percent", "tst_7min_percent" ),names_to = 'name', values_to = 'value') %>%
+  group_by(name, treatment, sex, lab, strain ) %>% 
+  summarise(`sample size` = n())
+write.csv(TST_sampleSize, file = 'TST_sampleSize.csv')
+
+
 ################ bodyweight data
 bw_M_JAX <- bw_M_JAX %>% select(lab, treatment, sex, strain, `Body Weight`)
 bw_F_JAX <- bw_F_JAX %>% select(lab, treatment, sex, strain, `Body Weight`)
@@ -562,8 +574,13 @@ bw_FM_TAUM <- grip_FM_TAUM %>% select(lab, treatment, sex, strain, `Body Weight`
 bw_combined_data <- bind_rows(bw_FM_TAUM, bw_M_TAUL, bw_F_TAUL, bw_F_JAX, bw_M_JAX) %>% as_tibble(.)  %>%
   filter( strain !='C3H/HeJ') %>%
   mutate(strain = factor(strain, levels = c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  ')))
-
 write.csv(bw_combined_data, file = 'bw_combined_data.csv')
+
+BodyWeight_sampleSize <- bw_combined_data %>% group_by(treatment, sex, lab, strain ) %>% 
+  summarise(`sample size` = n())%>%
+  mutate(name = 'Body Weight') %>%
+  select(name, treatment, sex, lab, strain, `sample size`  )
+write.csv(BodyWeight_sampleSize, file = 'BodyWeight_sampleSize.csv')
 
 ################ grip data
 grip_FM_TAUM <- grip_FM_TAUM %>% select(lab, treatment, sex, strain, grip.avg)
@@ -578,3 +595,48 @@ grip_combined_data <- bind_rows(grip_FM_TAUM, grip_M_TAUL, grip_F_TAUL, grip_F_J
   mutate(strain = factor(strain, levels = c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J",' ', '  ')))
 
 write.csv(grip_combined_data, file = 'grip_combined_data.csv')
+
+grip_sampleSize <- grip_combined_data %>% group_by(treatment, sex, lab, strain ) %>% 
+  summarise(`sample size` = n()) %>%
+  mutate(name = 'Grip Average') %>%
+  select(name, treatment, sex, lab, strain, `sample size`  )
+write.csv(grip_sampleSize, file = 'grip_sampleSize.csv')
+
+
+
+all_sampleSize <- rbind(grip_sampleSize , OFT_sampleSize) %>%
+  rbind(., TST_sampleSize) %>% 
+  rbind(., BodyWeight_sampleSize)
+
+
+all_sampleSize %>% 
+  filter(strain %in% c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J") ) %>%
+  arrange(lab) %>% 
+  filter(name != 'Body Weight') %>% 
+  select(name,lab, strain, sex, treatment,`sample size` ) %>%
+  pivot_wider(id_cols = c('name','strain', 'sex', 'treatment'), names_from = 'lab', values_from = 'sample size') %>%
+write.csv(., file = 'all_sampleSize.csv')
+write.csv(all_sampleSize %>% arrange(`sample size`), file = 'all_sampleSize_accending_N.csv')
+
+
+
+
+
+all_sampleSize %>% 
+  filter(strain %in% c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J") ) %>%
+  arrange(lab) %>% 
+  filter(name == 'Body Weight') %>% 
+  select(lab, strain, sex, treatment,`sample size` ) %>%
+  pivot_wider(id_cols = c('strain', 'sex', 'treatment'), names_from = 'lab', values_from = 'sample size') %>%
+  write.csv(x = ., file = 'all_sampleSize_Bodyweight.csv')
+
+
+
+all.contrasts  %>% 
+  filter(strain1 %in% c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J") ) %>%
+  filter(strain2 %in% c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J")) %>% nrow()
+
+all.contrasts2  %>% 
+  filter(strain %in% c("BALB/cJ","BTBR","C57BL/6J","DBA/2J","SWR/J", "CBA/J") ) %>% nrow()
+
+
